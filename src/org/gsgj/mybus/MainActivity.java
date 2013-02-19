@@ -1,33 +1,41 @@
 package org.gsgj.mybus;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Menu;
 import android.widget.TextView;
-import android.widget.Toast;
 
-@SuppressLint("ShowToast") public class MainActivity extends Activity {
-
+public class MainActivity extends Activity {
+	private String html = "";
+	private TextView textView;
+	private GetBusInfoThread getBusInfoThread;
+	private Handler mHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			
+			html = msg.getData().getString("str");
+			textView.setText(html);
+		}
+	};
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        String url = "http://m.gbis.go.kr/jsp/searchList.jsp?mode=isearch&searchKeyValue=22219";
-        String html = downloadURL(url);
+        getBusInfoThread = new GetBusInfoThread(mHandler);
+        getBusInfoThread.setDaemon(true);
+        getBusInfoThread.start();
         
-        TextView textView = (TextView)findViewById(R.id.html);
+        textView = (TextView)findViewById(R.id.html);
         textView.setText(html);
         
     }
 
-
+    /*
     private String downloadURL(String addr) {
 		String doc = "";
 		
@@ -59,7 +67,7 @@ import android.widget.Toast;
 		
 		return doc;
 	}
-
+	*/
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
