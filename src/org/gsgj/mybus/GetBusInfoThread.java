@@ -14,6 +14,11 @@ import android.os.Message;
 
 public class GetBusInfoThread extends Thread {
 	private Handler mHandler;
+	private String busStopName;
+	private String busNumber;
+	private String busDestination;
+	private String beforeBusStopCount;
+	private String estimatedTime;
 	
 	public GetBusInfoThread(Handler handler) {
 		this.mHandler = handler;
@@ -32,14 +37,16 @@ public class GetBusInfoThread extends Thread {
 			    InputStream is = url.openStream();
 				Source source = new Source(new InputStreamReader(is, "UTF-8"));
 				
-				Element table = (Element)source.getAllElements(HTMLElementName.TABLE).get(0);
-				Element tr = (Element)table.getAllElements(HTMLElementName.TR).get(0);
-				Element td = (Element)tr.getAllElements(HTMLElementName.TD).get(0);
-				Element span = (Element)td.getAllElements(HTMLElementName.SPAN).get(0);
-				String str = span.getContent().toString();
+				busStopName = getBusStopName(source);
+				busNumber = getBusNumber(source);
+				busDestination = getBusDestination(source);
+				//beforeBusStopCount
+				//estimatedTime
 				
 				Bundle bundle = new Bundle();
-				bundle.putString("str", str);
+				bundle.putString("busStopName", busStopName);
+				bundle.putString("busNumber", busNumber);
+				bundle.putString("busDestination", busDestination);
 				Message msg = new Message();
 				msg.setData(bundle);
 				mHandler.sendMessage(msg);
@@ -51,5 +58,32 @@ public class GetBusInfoThread extends Thread {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private String getBusDestination(Source source) {
+		Element table = (Element)source.getAllElements(HTMLElementName.TABLE).get(1);
+		Element tr = (Element)table.getAllElements(HTMLElementName.TR).get(0);
+		Element td = (Element)tr.getAllElements(HTMLElementName.TD).get(0);
+		Element em = (Element)td.getAllElements(HTMLElementName.EM).get(0);
+		
+		return em.getContent().toString();
+	}
+
+	private String getBusNumber(Source source) {
+		Element table = (Element)source.getAllElements(HTMLElementName.TABLE).get(1);
+		Element tr = (Element)table.getAllElements(HTMLElementName.TR).get(0);
+		Element td = (Element)tr.getAllElements(HTMLElementName.TD).get(0);
+		Element strong = (Element)td.getAllElements(HTMLElementName.STRONG).get(0);
+		
+		return strong.getContent().toString();
+	}
+
+	private String getBusStopName(Source source) {
+		Element table = (Element)source.getAllElements(HTMLElementName.TABLE).get(0);
+		Element tr = (Element)table.getAllElements(HTMLElementName.TR).get(0);
+		Element td = (Element)tr.getAllElements(HTMLElementName.TD).get(0);
+		Element span = (Element)td.getAllElements(HTMLElementName.SPAN).get(0);
+		
+		return span.getContent().toString();
 	}
 }

@@ -16,7 +16,9 @@ public class MainActivity extends Activity {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			
-			html = msg.getData().getString("str");
+			html = msg.getData().getString("busStopName") + " ";
+			html += msg.getData().getString("busNumber") + " ";
+			html += msg.getData().getString("busDestination");
 			textView.setText(html);
 		}
 	};
@@ -34,40 +36,6 @@ public class MainActivity extends Activity {
         textView.setText(html);
         
     }
-
-    /*
-    private String downloadURL(String addr) {
-		String doc = "";
-		
-		URL url;
-		try {
-			url = new URL(addr);
-			HttpURLConnection con = (HttpURLConnection)url.openConnection();
-			
-			if (con != null) {
-				con.setConnectTimeout(10000);
-				con.setUseCaches(false);
-				
-				if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-					BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-					for (;;) {
-						String line = br.readLine();
-						if (line == null) {
-							break;
-						}
-						doc += line + "\n";
-					}
-					br.close();
-				}
-				con.disconnect();
-			}
-		} catch (Exception e) {
-			Toast.makeText(this, "parsing error!", Toast.LENGTH_SHORT);
-		}
-		
-		return doc;
-	}
-	*/
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
