@@ -19,7 +19,7 @@ public class GetBusInfoThread extends Thread {
 	private Handler mHandler;
 	private String busStopName;
 	private String busNumber;
-	private String busDestination;
+	private String busLoc;
 	private String estimatedTime;
 	
 	public GetBusInfoThread(Handler handler) {
@@ -39,13 +39,13 @@ public class GetBusInfoThread extends Thread {
 				
 				busStopName = getBusStopName(source);
 				busNumber = getBusNumber(source);
-				busDestination = getBusDestination(source);
+				busLoc = getBusDestination(source);
 				estimatedTime = getEstimatedTime(source);
 				
 				Bundle bundle = new Bundle();
 				bundle.putString("busStopName", busStopName);
 				bundle.putString("busNumber", busNumber);
-				bundle.putString("busDestination", busDestination);
+				bundle.putString("busDestination", busLoc);
 				bundle.putString("estimatedTime", estimatedTime);
 				
 				Message msg = new Message();
