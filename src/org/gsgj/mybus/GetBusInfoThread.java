@@ -11,13 +11,15 @@ import net.htmlparser.jericho.Source;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 public class GetBusInfoThread extends Thread {
+	private static final String address = "http://m.gbis.go.kr/jsp/searchList.jsp?mode=isearch&searchKeyValue=22219"; 
+	
 	private Handler mHandler;
 	private String busStopName;
 	private String busNumber;
 	private String busDestination;
-	private String beforeBusStopCount;
 	private String estimatedTime;
 	
 	public GetBusInfoThread(Handler handler) {
@@ -30,36 +32,43 @@ public class GetBusInfoThread extends Thread {
 		
 		try {
 			while(true) {
-				Thread.sleep(1000);
-				
 				URL url;
-				url = new URL("http://m.gbis.go.kr/jsp/searchList.jsp?mode=isearch&searchKeyValue=22219");
+				url = new URL(address);
 			    InputStream is = url.openStream();
 				Source source = new Source(new InputStreamReader(is, "UTF-8"));
 				
 				busStopName = getBusStopName(source);
 				busNumber = getBusNumber(source);
 				busDestination = getBusDestination(source);
-				//beforeBusStopCount
-				//estimatedTime
+				estimatedTime = getEstimatedTime(source);
 				
 				Bundle bundle = new Bundle();
 				bundle.putString("busStopName", busStopName);
 				bundle.putString("busNumber", busNumber);
 				bundle.putString("busDestination", busDestination);
+				bundle.putString("estimatedTime", estimatedTime);
+				
 				Message msg = new Message();
 				msg.setData(bundle);
+				
 				mHandler.sendMessage(msg);
+				
+				Thread.sleep(1000);
 			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	private String getEstimatedTime(Source source) {
+		Element table = (Element)source.getAllElements(HTMLElementName.TABLE).get(1);
+		Element tr = (Element)table.getAllElements(HTMLElementName.TR).get(0);
+		Element td = (Element)tr.getAllElements(HTMLElementName.TD).get(0);
+		Element span = (Element)td.getAllElements(HTMLElementName.SPAN).get(0);
+		
+		return span.getContent().toString();
+	}
+
 	private String getBusDestination(Source source) {
 		Element table = (Element)source.getAllElements(HTMLElementName.TABLE).get(1);
 		Element tr = (Element)table.getAllElements(HTMLElementName.TR).get(0);
