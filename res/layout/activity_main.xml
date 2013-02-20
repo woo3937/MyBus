@@ -12,27 +12,41 @@
         android:id="@+id/busStopName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/load_msg" />
+        android:text="@string/load_msg"
+        android:textColor="#AFE1FF" />
+    
+    <TextView
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#AFE1FF"
+        android:layout_below="@id/busStopName"
+        android:layout_alignParentLeft="true" />
     
     <TextView 
         android:id="@+id/busNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/busStopName"
-        android:layout_alignParentLeft="true" />
+        android:layout_below="@id/line"
+        android:layout_alignParentLeft="true"
+        android:textColor="#FFFFFF"
+        android:paddingTop="20dp" />
     
      <TextView 
         android:id="@+id/busLoc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/busNumber"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:textColor="#FFFFFF" />
      
      <TextView 
         android:id="@+id/estimatedTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/busLoc"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:textColor="#FFFFFF"
+        android:paddingTop="30dp" />
 
 </RelativeLayout>
